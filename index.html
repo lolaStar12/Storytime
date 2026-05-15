@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>English Stories – Learn by Reading</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --pink: #ff4d8d;
+      --pink-light: #ff85b3;
+      --pink-pale: #ffe0ee;
+      --black: #0d0d0d;
+      --dark: #1a1a1a;
+      --card-bg: #141414;
+      --text: #f5f5f5;
+      --muted: #888;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      background: rgba(13,13,13,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--pink);
+    }
+    .logo span { color: var(--text); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav ul a:hover { color: var(--pink); }
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 6rem 2rem 5rem;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(255,77,141,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,77,141,0.12);
+      border: 1px solid rgba(255,77,141,0.3);
+      color: var(--pink);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--pink); }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+    .levels {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      padding: 0 2rem 5rem;
+    }
+    .level-card {
+      background: var(--card-bg);
+      border: 1px solid #222;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      width: 280px;
+      cursor: pointer;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .level-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--pink);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+    .level-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--pink);
+      box-shadow: 0 20px 60px rgba(255,77,141,0.12);
+    }
+    .level-card:hover::before { transform: scaleX(1); }
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+    .badge-a { background: rgba(255,77,141,0.15); color: var(--pink); }
+    .badge-b { background: rgba(255,133,179,0.15); color: var(--pink-light); }
+    .badge-c { background: rgba(255,224,238,0.1); color: var(--pink-pale); }
+    .level-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.6rem;
+    }
+    .level-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .level-count { font-size: 0.78rem; color: var(--pink); letter-spacing: 1px; text-transform: uppercase; }
+    .stories-section {
+      padding: 2rem 3rem 6rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: none;
+    }
+    .stories-section.active { display: block; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .section-header h2 { font-family: 'Playfair Display', serif; font-size: 2rem; }
+    .back-btn {
+      background: none;
+      border: 1px solid #333;
+      color: var(--muted);
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+    .back-btn:hover { border-color: var(--pink); color: var(--pink); }
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .story-card {
+      background: var(--card-bg);
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 1.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .story-card:hover {
+      border-color: var(--pink);
+      box-shadow: 0 10px 40px rgba(255,77,141,0.1);
+      transform: translateY(-3px);
+    }
+    .story-emoji { font-size: 2rem; margin-bottom: 1rem; }
+    .story-card h4 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 0.5rem; }
+    .story-card p { color: var(--muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem; }
+    .story-meta { display: flex; gap: 0.8rem; }
+    .tag {
+      font-size: 0.72rem;
+      background: rgba(255,77,141,0.1);
+      color: var(--pink);
+      border-radius: 100px;
+      padding: 0.25rem 0.7rem;
+    }
+    .reader {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 3rem 6rem;
+    }
+    .reader.active { display: block; }
+    .reader-nav { margin-bottom: 3rem; }
+    .reader h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 0.5rem; line-height: 1.2; }
+    .reader-meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 2.5rem; display: flex; gap: 1rem; }
+    .reader-body { font-size: 1.05rem; line-height: 1.9; color: #ddd; }
+    .reader-body p { margin-bottom: 1.4rem; }
+    .add-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--pink);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 1.8rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(255,77,141,0.4);
+      transition: all 0.3s;
+      z-index: 200;
+    }
+    .add-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,77,141,0.5); }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--dark);
+      border: 1px solid #333;
+      border-radius: 24px;
+      padding: 2.5rem;
+      width: 90%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 1.5rem; color: var(--pink); }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      background: #0d0d0d;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--pink); }
+    .form-group textarea { min-height: 180px; resize: vertical; }
+    .modal-btns { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .btn-primary {
+      flex: 1;
+      background: var(--pink);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary {
+      flex: 1;
+      background: none;
+      color: var(--muted);
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-secondary:hover { border-color: var(--pink); color: var(--pink); }
+    footer { text-align: center; padding: 2rem; color: #444; font-size: 0.8rem; border-top: 1px solid #1a1a1a; }
+    footer span { color: var(--pink); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--pink); }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      nav ul { gap: 1rem; }
+      .hero { padding: 4rem 1.5rem 3rem; }
+      .stories-section, .reader { padding: 1.5rem 1.5rem 5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Story<span>English</span></div>
+  <ul>
+    <li><a href="#" onclick="showHome()">Home</a></li>
+    <li><a href="#" onclick="openModal()">+ Add Story</a></li>
+  </ul>
+</nav>
+
+<div id="home">
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-tag">✦ Learn English Through Stories</div>
+    <h1>Read. Learn.<br/><em>Grow.</em></h1>
+    <p>Discover English stories for every level. From beginners to advanced readers — your journey starts here.</p>
+  </section>
+
+  <div class="levels">
+    <div class="level-card" onclick="showLevel('A')">
+      <div class="level-badge badge-a">A</div>
+      <h3>Beginner</h3>
+      <p>Simple words, short sentences. Perfect for those just starting their English journey.</p>
+      <div class="level-count" id="count-A">0 stories</div>
+    </div>
+    <div class="level-card" onclick="showLevel('B')">
+      <div class="level-badge badge-b">B</div>
+      <h3>Intermediate</h3>
+      <p>Richer vocabulary and longer texts. Build confidence and expand your understanding.</p>
+      <div class="level-count" id="count-B">0 stories</div>
+    </div>
+    <div class="level-card" onclick="showLevel('C')">
+      <div class="level-badge badge-c">C</div>
+      <h3>Advanced</h3>
+      <p>Complex narratives and sophisticated language. For those ready to master English.</p>
+      <div class="level-count" id="count-C">0 stories</div>
+    </div>
+  </div>
+</div>
+
+<div id="stories-section" class="stories-section">
+  <div class="section-header">
+    <h2 id="stories-title"></h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="stories-grid" id="stories-grid"></div>
+</div>
+
+<div id="reader" class="reader">
+  <div class="reader-nav">
+    <button class="back-btn" id="reader-back">← Back</button>
+  </div>
+  <h2 id="reader-title"></h2>
+  <div class="reader-meta">
+    <span id="reader-level"></span>
+    <span>•</span>
+    <span id="reader-genre"></span>
+  </div>
+  <div class="reader-body" id="reader-body"></div>
+</div>
+
+<button class="add-btn" onclick="openModal()">+ Add Story</button>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>✦ Add a New Story</h3>
+    <div class="form-group">
+      <label>Story Title</label>
+      <input type="text" id="story-title" placeholder="e.g. The Lost Dog"/>
+    </div>
+    <div class="form-group">
+      <label>Level</label>
+      <select id="story-level">
+        <option value="A">A – Beginner</option>
+        <option value="B">B – Intermediate</option>
+        <option value="C">C – Advanced</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Genre / Topic</label>
+      <input type="text" id="story-genre" placeholder="e.g. Adventure, Friendship..."/>
+    </div>
+    <div class="form-group">
+      <label>Short Description</label>
+      <input type="text" id="story-desc" placeholder="A one-line summary..."/>
+    </div>
+    <div class="form-group">
+      <label>Story Text</label>
+      <textarea id="story-body" placeholder="Write the full story here..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Emoji (optional)</label>
+      <input type="text" id="story-emoji" placeholder="📖" maxlength="4"/>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="addStory()">Add Story ✦</button>
+    </div>
+  </div>
+</div>
+
+<footer>Made with <span>♥</span> for English learners</footer>
+
+<script>
+  let stories = { A: [], B: [], C: [] };
+  let currentLevel = 'A';
+
+  function updateCounts() {
+    ['A','B','C'].forEach(l => {
+      const n = stories[l].length;
+      document.getElementById('count-' + l).textContent = n + (n === 1 ? ' story' : ' stories');
+    });
+  }
+
+  function showHome() {
+    document.getElementById('home').style.display = 'block';
+    document.getElementById('stories-section').classList.remove('active');
+    document.getElementById('reader').classList.remove('active');
+    updateCounts();
+  }
+
+  function showLevel(level) {
+    currentLevel = level;
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('reader').classList.remove('active');
+    document.getElementById('stories-section').classList.add('active');
+
+    const titles = { A: 'Level A – Beginner', B: 'Level B – Intermediate', C: 'Level C – Advanced' };
+    document.getElementById('stories-title').textContent = titles[level];
+
+    const grid = document.getElementById('stories-grid');
+    grid.innerHTML = '';
+
+    if (stories[level].length === 0) {
+      grid.innerHTML = `<div style="color:var(--muted);grid-column:1/-1;padding:3rem 0;font-size:1rem;">No stories yet. Be the first to add one! 🌸</div>`;
+      return;
+    }
+
+    stories[level].forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'story-card';
+      card.onclick = () => readStory(s.id, level);
+      card.innerHTML = `
+        <div class="story-emoji">${s.emoji || '📖'}</div>
+        <h4>${s.title}</h4>
+        <p>${s.desc}</p>
+        <div class="story-meta">
+          <span class="tag">Level ${s.level}</span>
+          <span class="tag">${s.genre}</span>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function readStory(id, level) {
+    const story = stories[level].find(s => s.id === id);
+    if (!story) return;
+    document.getElementById('stories-section').classList.remove('active');
+    const reader = document.getElementById('reader');
+    reader.classList.add('active');
+    document.getElementById('reader-title').textContent = story.title;
+    document.getElementById('reader-level').textContent = 'Level ' + story.level;
+    document.getElementById('reader-genre').textContent = story.genre;
+    document.getElementById('reader-body').innerHTML = story.body.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
+    document.getElementById('reader-back').onclick = () => showLevel(level);
+  }
+
+  function openModal() { document.getElementById('modal').classList.add('active'); }
+  function closeModal() { document.getElementById('modal').classList.remove('active'); }
+
+  function addStory() {
+    const title = document.getElementById('story-title').value.trim();
+    const level = document.getElementById('story-level').value;
+    const genre = document.getElementById('story-genre').value.trim() || 'General';
+    const desc = document.getElementById('story-desc').value.trim() || 'A new story.';
+    const body = document.getElementById('story-body').value.trim();
+    const emoji = document.getElementById('story-emoji').value.trim() || '📖';
+    if (!title || !body) { alert('Please add a title and story text.'); return; }
+    stories[level].push({ id: Date.now(), title, emoji, desc, genre, level, body });
+    closeModal();
+    ['story-title','story-genre','story-desc','story-body','story-emoji'].forEach(id => document.getElementById(id).value = '');
+    updateCounts();
+    showLevel(level);
+  }
+
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  updateCounts();
+</script>
+</body>
+</html>
